@@ -1,7 +1,5 @@
 'use strict';
 
-const assert = require('assert');
-
 class Tokenizer
 {
 	constructor(options, onField, onRowEnd, onEnd)
@@ -71,16 +69,14 @@ class Tokenizer
 				} else {
 					value[this.valueBufSize++] = chr;
 				}
+			} else if (chr === delimiterCode) {
+				this.endFieldValue();
+			} else if (chr === quoteCode) {
+				this.quoted = true;
+			} else if (chr === 0x0d || chr === 0x0a) {
+				this.endRow();
 			} else {
-				if (chr === delimiterCode) {
-					this.endFieldValue();
-				} else if (chr === quoteCode) {
-					this.quoted = true;
-				} else if (chr === 0x0d || chr === 0x0a) {
-					this.endRow();
-				} else {
-					value[this.valueBufSize++] = chr;
-				}
+				value[this.valueBufSize++] = chr;
 			}
 		}
 	}

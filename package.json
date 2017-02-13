@@ -1,0 +1,26 @@
+{
+  "name": "@avz/csv",
+  "version": "0.0.0",
+  "description": "Fast CSV stream parser",
+  "keywords": [
+    "csv"
+  ],
+  "licence": "MIT",
+  "author": "avz@nologin.ru",
+  "dependencies": {
+    "iconv": "^2.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^3.15.0",
+    "eslint-plugin-mocha": "^4.8.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
+  },
+  "scripts": {
+    "test": "eslint . && mocha --recursive",
+    "coverage": "istanbul cover --report html _mocha -- --recursive"
+  },
+  "engines": {
+    "node": ">=6"
+  }
+}
