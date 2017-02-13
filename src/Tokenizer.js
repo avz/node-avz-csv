@@ -88,9 +88,6 @@ class Tokenizer
 	end()
 	{
 		this.endRow();
-
-		console.error(this.fieldsCount, this.linesCount);
-
 		this.onEnd();
 	}
 
