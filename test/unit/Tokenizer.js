@@ -43,5 +43,41 @@ describe('Tokenizer', () => {
 		assert.deepStrictEqual(parse(',', '"', 'aaa","b"b"b,c"c"c'), [['aaa,bbb', 'ccc']]);
 		assert.deepStrictEqual(parse(',', '"', 'aaa,bb""b,ccc'), [['aaa', 'bbb', 'ccc']]);
 		assert.deepStrictEqual(parse(',', '"', 'aaa,"b""bb",ccc'), [['aaa', 'b"bb', 'ccc']]);
+
+		assert.deepStrictEqual(parse(',', '"', 'aaa,"hello\nworld"'), [['aaa', 'hello\nworld']]);
+	});
+
+	it('buffer size', () => {
+		const opts = new TokenizerOptions(','.charCodeAt(0), '"'.charCodeAt(0), 1);
+		const rows = [];
+		var row = [];
+
+		const t = new Tokenizer(
+			opts,
+			(buf, start, end) => {
+				assert(buf instanceof Buffer);
+				row.push(buf.toString('utf-8', start, end));
+			},
+			() => {
+				rows.push(row);
+				row = [];
+			},
+			() => {
+			}
+		);
+
+		t.write(Buffer.from('h'));
+		t.write(Buffer.from('e'));
+		t.write(Buffer.from('l'));
+		t.write(Buffer.from('lo,'));
+		t.write(Buffer.from('world'));
+		t.write(Buffer.from(',foo'));
+		t.end();
+
+		assert.deepStrictEqual(rows, [['hello', 'world', 'foo']]);
+	});
+
+	it('multirows', () => {
+		assert.deepStrictEqual(parse(',', '"', 'aaa,bbb\nccc,ddd'), [['aaa', 'bbb'], ['ccc', 'ddd']]);
 	});
 });

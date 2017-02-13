@@ -4,6 +4,15 @@ const assert = require('assert');
 const Options = require('../../src/Options');
 
 describe('Options', () => {
+	describe('constructor with arguments', () => {
+		assert.throws(
+			() => {
+				return new Options({hello: 10});
+			},
+			/Use Options\.from\(\) to fill object with options/
+		);
+	});
+
 	describe('from()', () => {
 		const values = {
 			detectTypes: [false, true],
