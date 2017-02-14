@@ -17,7 +17,6 @@ class Options
 		this.rtrim = false;
 		this.trim = false;
 		this.skipEmptyLines = false;
-		this.encoding = null;
 	}
 
 	/**

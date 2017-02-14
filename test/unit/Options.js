@@ -23,8 +23,7 @@ describe('Options', () => {
 			ltrim: [false, true],
 			rtrim: [false, true],
 			trim: [false, true],
-			skipEmptyLines: [false, true],
-			encoding: [null, 'cp1251']
+			skipEmptyLines: [false, true]
 		};
 
 		for (const name in values) {
