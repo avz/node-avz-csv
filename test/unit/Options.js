@@ -47,25 +47,18 @@ describe('Options', () => {
 				assert.throws(() => Options.from({unk: true}), /Unknown option: unk/);
 			});
 
-			it('wrong type', () => {
-				assert.throws(
-					() => Options.from({delimiter: true}),
-					/Options `delimiter` must be string/
-				);
-			});
-
 			describe('columns', () => {
 				it('wrong type', () => {
 					assert.throws(
 						() => Options.from({columns: true}),
-						/Options `columns` is invalid: must be "first-line" or null or array of column names/
+						/Option `columns` is invalid: must be "first-line" or null or array of column names/
 					);
 				});
 
 				it('name not string', () => {
 					assert.throws(
 						() => Options.from({columns: ["a", true]}),
-						/Options `columns` is invalid: column name must be string/
+						/Option `columns` is invalid: column name must be string/
 					);
 				});
 			});
@@ -83,20 +76,6 @@ describe('Options', () => {
 
 				assert.doesNotThrow(
 					() => Options.from({rtrim: false, trim: false})
-				);
-			});
-
-			it('multibyte `delimiter`', () => {
-				assert.throws(
-					() => Options.from({delimiter: 'Ы'}),
-					/Option `delimiter` must be a single byte character/
-				);
-			});
-
-			it('multibyte `quote`', () => {
-				assert.throws(
-					() => Options.from({quote: 'Ы'}),
-					/Option `quote` must be a single byte character/
 				);
 			});
 		});

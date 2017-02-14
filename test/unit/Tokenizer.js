@@ -11,7 +11,7 @@ describe('Tokenizer', () => {
 		var endEmitted = false;
 
 		const t = new Tokenizer(
-			new TokenizerOptions(delimiter.charCodeAt(0), quote.charCodeAt(0)),
+			TokenizerOptions.from({delimiter, quote}),
 			(buf, start, end) => {
 				assert(buf instanceof Buffer);
 				row.push(buf.toString('utf-8', start, end));
@@ -48,7 +48,7 @@ describe('Tokenizer', () => {
 	});
 
 	it('buffer size', () => {
-		const opts = new TokenizerOptions(','.charCodeAt(0), '"'.charCodeAt(0), 1);
+		const opts = TokenizerOptions.from({delimiter: ',', quote: '"', initialBufferSize: 1});
 		const rows = [];
 		var row = [];
 

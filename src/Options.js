@@ -1,5 +1,8 @@
 'use strict';
 
+const TokenizerOptions = require('./TokenizerOptions');
+const OptionsValidator = require('./OptionsValidator');
+
 class Options
 {
 	constructor()
@@ -34,32 +37,15 @@ class Options
 			}
 		}
 
-		const _validate = (object, name, type) => {
-			const v = object[name];
+		const validator = new OptionsValidator;
 
-			if (v === undefined || v === instance[name]) {
-				return instance[name];
-			}
+		instance.detectTypes = validator.needBool(object, 'detectTypes', instance.detectTypes);
+		instance.detectDates = validator.needBool(object, 'detectDates', instance.detectDates);
 
-			if (type instanceof Function) {
-				const res = type(v);
-
-				if (res !== true) {
-					throw new Error(`Options \`${name}\` is invalid: ${res}`);
-				}
-			} else if (typeof(v) !== type) {
-				throw new Error(`Options \`${name}\` must be ${type}`);
-			}
-
-			return v;
-		};
-
-		instance.detectTypes = _validate(object, 'detectTypes', 'boolean');
-		instance.detectDates = _validate(object, 'detectDates', 'boolean');
-
-		instance.columns = _validate(
+		instance.columns = validator.needCb(
 			object,
 			'columns',
+			instance.columns,
 			(cd) => {
 				if (cd === 'first-line' || cd === null) {
 					return true;
@@ -79,28 +65,17 @@ class Options
 			}
 		);
 
-		instance.delimiter = _validate(object, 'delimiter', 'string');
-		instance.quote = _validate(object, 'quote', 'string');
-
-		if (Buffer.byteLength(instance.delimiter) !== 1) {
-			throw new Error('Option `delimiter` must be a single byte character');
-		}
-
-		if (Buffer.byteLength(instance.quote) !== 1) {
-			throw new Error('Option `quote` must be a single byte character');
-		}
-
-		instance.trim = _validate(object, 'trim', 'boolean');
-		instance.ltrim = _validate(object, 'ltrim', 'boolean');
-		instance.rtrim = _validate(object, 'rtrim', 'boolean');
+		instance.delimiter = validator.needByte(object, 'delimiter', instance.delimiter);
+		instance.quote = validator.needByte(object, 'quote', instance.quote);
+		instance.trim = validator.needBool(object, 'trim', instance.trim);
+		instance.ltrim = validator.needBool(object, 'ltrim', instance.ltrim);
+		instance.rtrim = validator.needBool(object, 'rtrim', instance.rtrim);
 
 		if (instance.trim && (instance.ltrim || instance.rtrim)) {
 			throw new Error('Option `trim` cannot be combined with `ltrim` or `rtrim`');
 		}
 
-		instance.skipEmptyLines = _validate(object, 'skipEmptyLines', 'boolean');
-
-		instance.encoding = _validate(object, 'encoding', 'string');
+		instance.skipEmptyLines = validator.needBool(object, 'skipEmptyLines', instance.skipEmptyLines);
 
 		return instance;
 	}

@@ -4,8 +4,8 @@ class Tokenizer
 {
 	constructor(options, onField, onRowEnd, onEnd)
 	{
-		this.delimiterCode = options.delimiterCode;
-		this.quoteCode = options.quoteCode;
+		this.delimiterCode = options.delimiter.charCodeAt(0);
+		this.quoteCode = options.quote.charCodeAt(0);
 
 		this.quoted = false;
 		this.lastCharIsQuote = false;
