@@ -82,6 +82,14 @@ class Options
 		instance.delimiter = _validate(object, 'delimiter', 'string');
 		instance.quote = _validate(object, 'quote', 'string');
 
+		if (Buffer.byteLength(instance.delimiter) !== 1) {
+			throw new Error('Option `delimiter` must be a single byte character');
+		}
+
+		if (Buffer.byteLength(instance.quote) !== 1) {
+			throw new Error('Option `quote` must be a single byte character');
+		}
+
 		instance.trim = _validate(object, 'trim', 'boolean');
 		instance.ltrim = _validate(object, 'ltrim', 'boolean');
 		instance.rtrim = _validate(object, 'rtrim', 'boolean');

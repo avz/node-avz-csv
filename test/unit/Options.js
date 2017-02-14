@@ -85,6 +85,20 @@ describe('Options', () => {
 					() => Options.from({rtrim: false, trim: false})
 				);
 			});
+
+			it('multibyte `delimiter`', () => {
+				assert.throws(
+					() => Options.from({delimiter: 'Ы'}),
+					/Option `delimiter` must be a single byte character/
+				);
+			});
+
+			it('multibyte `quote`', () => {
+				assert.throws(
+					() => Options.from({quote: 'Ы'}),
+					/Option `quote` must be a single byte character/
+				);
+			});
 		});
 	});
 });
