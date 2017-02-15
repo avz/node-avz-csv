@@ -49,16 +49,14 @@ class Tokenizer
 				if (this.lastCharIsQuote) {
 					this.lastCharIsQuote = false;
 
-					if (chr === quoteCode) {
-						value[this.valueBufSize++] = chr;
-
-						continue;
-					} else if (chr === delimiterCode) {
+					if (chr === delimiterCode) {
 						this.endFieldValue();
 
 						this.quoted = false;
-
-						continue;
+					} else if (chr === quoteCode) {
+						value[this.valueBufSize++] = chr;
+					} else if (chr === 0x0d || chr === 0x0a) {
+						this.endRow();
 					} else {
 						value[this.valueBufSize++] = chr;
 

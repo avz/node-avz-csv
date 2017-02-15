@@ -45,6 +45,7 @@ describe('Tokenizer', () => {
 		assert.deepStrictEqual(parse(',', '"', 'aaa,"b""bb",ccc'), [['aaa', 'b"bb', 'ccc']]);
 
 		assert.deepStrictEqual(parse(',', '"', 'aaa,"hello\nworld"'), [['aaa', 'hello\nworld']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa,"hello"\n"world"'), [['aaa', 'hello'], ['world']]);
 	});
 
 	it('buffer size', () => {
