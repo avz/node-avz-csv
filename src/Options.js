@@ -1,6 +1,5 @@
 'use strict';
 
-const TokenizerOptions = require('./TokenizerOptions');
 const OptionsValidator = require('./OptionsValidator');
 
 class Options
