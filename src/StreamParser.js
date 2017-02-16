@@ -15,7 +15,7 @@ class StreamParser extends Transform
 	 * @param {object|Options} opts
 	 * @returns {Parser}
 	 */
-	constructor(opts)
+	constructor(opts = {})
 	{
 		const options = Options.from(opts);
 
