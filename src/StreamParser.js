@@ -51,7 +51,6 @@ class StreamParser extends Transform
 				quote: this.options.quote,
 				ltrim: this.options.ltrim,
 				rtrim: this.options.rtrim,
-				trim: this.options.trim,
 				skipEmptyLines: this.options.skipEmptyLines
 			}),
 			this.onTokenizerValue.bind(this),

@@ -102,6 +102,35 @@ describe('Tokenizer', () => {
 	});
 
 	it('ltrim', () => {
+		assert.deepStrictEqual(parse({ltrim: true}, 'aaa\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, ' aaa\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '  \taaa\n   bbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '  \taaa \n   bbb '), [['aaa '], ['bbb ']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '  \t \n   bbb '), [[''], ['bbb ']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '  \t \n    '), [[''], ['']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '"aaa"\n"bbb"'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, ' "aaa"\n "bbb"'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, '" aaa"\n" bbb"'), [[' aaa'], [' bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true}, ' A"aaa"\n B"bbb"'), [['Aaaa'], ['Bbbb']]);
+	});
 
+	it('rtrim', () => {
+		assert.deepStrictEqual(parse({rtrim: true}, 'aaa\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, 'aaa \nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, 'aaa\t  \nbbb   '), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, ' aaa \t \n bbb   '), [[' aaa'], [' bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, '  \t \n bbb   '), [[''], [' bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, '  \t \n    '), [[''], ['']]);
+		assert.deepStrictEqual(parse({rtrim: true}, '"aaa"\n"bbb"'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, '"aaa" \n"bbb" '), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({rtrim: true}, '"aaa "\n"bbb "'), [['aaa '], ['bbb ']]);
+		assert.deepStrictEqual(parse({rtrim: true}, 'A"aaa"A \nB"bbb"B '), [['AaaaA'], ['BbbbB']]);
+	});
+
+	it('ltrim + rtrim', () => {
+		assert.deepStrictEqual(parse({ltrim: true, rtrim: true}, 'aaa\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true, rtrim: true}, '   aaa  \n  bbb '), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true, rtrim: true}, '     \n  bbb '), [[''], ['bbb']]);
+		assert.deepStrictEqual(parse({ltrim: true, rtrim: true}, '   " " \n  bbb '), [[' '], ['bbb']]);
 	});
 });

@@ -1,7 +1,5 @@
 'use strict';
 
-const NotImplemented = require('./error/NotImplemented');
-
 class Tokenizer
 {
 	/**
@@ -14,22 +12,6 @@ class Tokenizer
 	 */
 	constructor(options, onField, onRowEnd, onEnd)
 	{
-		if (options.ltrim) {
-			throw new NotImplemented('Options.ltrim');
-		}
-
-		if (options.rtrim) {
-			throw new NotImplemented('Options.ltrim');
-		}
-
-		if (options.trim) {
-			throw new NotImplemented('Options.trim');
-		}
-
-		if (options.skipEmptyLines) {
-			throw new NotImplemented('Options.skipEmptyLines');
-		}
-
 		this.delimiterCode = options.delimiter.charCodeAt(0);
 		this.quoteCode = options.quote.charCodeAt(0);
 
@@ -39,6 +21,13 @@ class Tokenizer
 
 		this.valueBuf = Buffer.allocUnsafe(options.initialBufferSize);
 		this.valueBufSize = 0;
+
+		this.firstQuotePosition = -1;
+		this.lastQuotePosition = -1;
+
+		this.options = options;
+
+		this.needTriming = this.options.ltrim || this.options.rtrim;
 
 		this.linesCount = 0;
 		this.fieldsCount = 0;
@@ -92,6 +81,7 @@ class Tokenizer
 						continue;
 					}
 
+					this.lastQuotePosition = this.valueBufSize;
 					this.quoted = false;
 					// there is no `continue`!
 				} else if (chr === quoteCode) {
@@ -114,6 +104,7 @@ class Tokenizer
 				}
 
 				this.endRow();
+				this.firstQuotePosition = -1;
 
 				continue;
 			}
@@ -122,7 +113,13 @@ class Tokenizer
 
 			if (chr === delimiterCode) {
 				this.endFieldValue();
+				this.firstQuotePosition = -1;
+
 			} else if (chr === quoteCode) {
+				if (this.firstQuotePosition === -1) {
+					this.firstQuotePosition = this.valueBufSize;
+				}
+
 				this.quoted = true;
 			} else if (chr === 0x0d) {
 				this.lastCharIsCR = true;
@@ -153,9 +150,64 @@ class Tokenizer
 	 */
 	endFieldValue()
 	{
-		this.onField(this.valueBuf, 0, this.valueBufSize);
+		if (this.needTriming) {
+			this.onFieldWithTriming(this.valueBuf, 0, this.valueBufSize);
+		} else {
+			this.onField(this.valueBuf, 0, this.valueBufSize);
+		}
 
 		this.valueBufSize = 0;
+	}
+
+	/**
+	 * Сделать все *trim для значения, после чего передать результат в onField()
+	 * @param {Buffer} buf
+	 * @param {number} start
+	 * @param {number} end
+	 * @returns {undefined}
+	 */
+	onFieldWithTriming(buf, start, end)
+	{
+		var trimmedStart = start;
+		var trimmedEnd = end;
+
+		var i;
+
+		if (this.options.ltrim) {
+			const scanEnd = this.firstQuotePosition === -1 ? trimmedEnd : this.firstQuotePosition;
+
+			for (i = start; i < scanEnd; i++) {
+				if (!Tokenizer.isSpace(buf[i])) {
+					break;
+				}
+			}
+
+			trimmedStart = i;
+		}
+
+		if (this.options.rtrim) {
+			const scanStart = this.firstQuotePosition === -1 ? trimmedStart : this.lastQuotePosition;
+
+			for (i = end - 1; i >= scanStart; i--) {
+				if (!Tokenizer.isSpace(buf[i])) {
+					break;
+				}
+			}
+
+			trimmedEnd = i + 1;
+		}
+
+		this.onField(buf, trimmedStart, trimmedEnd);
+	}
+
+	/**
+	 * @private
+	 * @param {number} chr
+	 * @returns {boolean}
+	 */
+	static isSpace(chr)
+	{
+		return chr === 0x20 || chr === 0x09;
 	}
 
 	/**

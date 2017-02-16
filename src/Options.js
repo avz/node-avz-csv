@@ -21,7 +21,6 @@ class Options
 		this.quote = '"';
 		this.ltrim = false;
 		this.rtrim = false;
-		this.trim = false;
 		this.skipEmptyLines = false;
 	}
 
@@ -70,7 +69,6 @@ class Options
 		instance.batch = validator.needBool(object, 'batch', instance.batch);
 		instance.delimiter = validator.needByte(object, 'delimiter', instance.delimiter);
 		instance.quote = validator.needByte(object, 'quote', instance.quote);
-		instance.trim = validator.needBool(object, 'trim', instance.trim);
 		instance.ltrim = validator.needBool(object, 'ltrim', instance.ltrim);
 		instance.rtrim = validator.needBool(object, 'rtrim', instance.rtrim);
 

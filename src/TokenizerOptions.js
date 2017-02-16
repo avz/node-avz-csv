@@ -19,7 +19,6 @@ class TokenizerOptions
 		this.initialBufferSize = 2 * 64 * 1024;
 		this.ltrim = false;
 		this.rtrim = false;
-		this.trim = false;
 		this.skipEmptyLines = false;
 	}
 
@@ -43,13 +42,8 @@ class TokenizerOptions
 		instance.delimiter = validator.needByte(options, 'delimiter', instance.delimiter);
 		instance.quote = validator.needByte(options, 'quote', instance.quote);
 		instance.initialBufferSize = validator.needNumber(options, 'initialBufferSize', instance.initialBufferSize);
-		instance.trim = validator.needBool(options, 'trim', instance.trim);
 		instance.ltrim = validator.needBool(options, 'ltrim', instance.ltrim);
 		instance.rtrim = validator.needBool(options, 'rtrim', instance.rtrim);
-
-		if (instance.trim && (instance.ltrim || instance.rtrim)) {
-			throw new Error('Option `trim` cannot be combined with `ltrim` or `rtrim`');
-		}
 
 		return instance;
 	}

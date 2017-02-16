@@ -17,21 +17,5 @@ describe('TokenizerOptions', () => {
 		it('unknown options', () => {
 			assert.throws(() => TokenizerOptions.from({unk: true}), /Unknown option: unk/);
 		});
-
-		it('trim in combination of ltrim or rtrim', () => {
-			assert.throws(
-				() => TokenizerOptions.from({trim: true, ltrim: true}),
-				/Option `trim` cannot be combined with `ltrim` or `rtrim`/
-			);
-
-			assert.throws(
-				() => TokenizerOptions.from({rtrim: true, trim: true}),
-				/Option `trim` cannot be combined with `ltrim` or `rtrim`/
-			);
-
-			assert.doesNotThrow(
-				() => TokenizerOptions.from({rtrim: false, trim: false})
-			);
-		});
 	});
 });

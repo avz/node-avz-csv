@@ -83,7 +83,7 @@ describe('StreamParser', () => {
 	});
 
 	describe('not implemented options', () => {
-		const notImplemented = ['detectDates', 'detectTypes', 'ltrim', 'rtrim', 'trim'];
+		const notImplemented = ['detectDates', 'detectTypes'];
 
 		for (const opt of notImplemented) {
 			it(opt, () => {
