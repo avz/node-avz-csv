@@ -44,11 +44,22 @@ class StreamParser extends Transform
 		);
 	}
 
+	/**
+	 *
+	 * @param {Buffer} buf
+	 * @param {number} start
+	 * @param {number} end
+	 * @returns {undefined}
+	 */
 	onTokenizerValue(buf, start, end)
 	{
 		this.currentRow.push(buf.toString('utf-8', start, end));
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	onTokenizerRowEnd()
 	{
 		this.onRow(this.currentRow);
@@ -56,11 +67,20 @@ class StreamParser extends Transform
 		this.currentRow = [];
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	onTokenizerEnd()
 	{
 		this.push(null);
 	}
 
+	/**
+	 *
+	 * @param {*[]} row
+	 * @returns {undefined}
+	 */
 	onRow(row)
 	{
 		this.rowNumber++;
@@ -79,11 +99,22 @@ class StreamParser extends Transform
 		}
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	initRowConstructor()
 	{
 		this.rowConstructor = new RowConstructor(this.columns);
 	}
 
+	/**
+	 *
+	 * @param {string|Buffer} data
+	 * @param {string} enc
+	 * @param {Function} cb
+	 * @returns {undefined}
+	 */
 	_transform(data, enc, cb)
 	{
 		assert(data instanceof Buffer, 'StreamParser.prototype.write() expect Buffer as argument');
@@ -93,6 +124,11 @@ class StreamParser extends Transform
 		cb();
 	}
 
+	/**
+	 *
+	 * @param {Function} cb
+	 * @returns {undefined}
+	 */
 	_flush(cb)
 	{
 		this.tokenizer.end();

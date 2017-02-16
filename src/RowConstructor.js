@@ -2,11 +2,21 @@
 
 class RowConstructor
 {
+	/**
+	 *
+	 * @param {string[]} columnNames
+	 * @returns {RowConstructor}
+	 */
 	constructor(columnNames)
 	{
 		this._createFromArray = this._compileFunction(columnNames);
 	}
 
+	/**
+	 *
+	 * @param {string[]} columnNames
+	 * @returns {Function}
+	 */
 	_compileFunction(columnNames)
 	{
 		const uniq = new Set;
@@ -34,6 +44,11 @@ class RowConstructor
 		return new Function('fields', code);
 	}
 
+	/**
+	 *
+	 * @param {*[]} fields
+	 * @returns {Function}
+	 */
 	createFromArray(fields)
 	{
 		return this._createFromArray(fields);

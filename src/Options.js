@@ -4,6 +4,9 @@ const OptionsValidator = require('./OptionsValidator');
 
 class Options
 {
+	/**
+	 * @returns {Options}
+	 */
 	constructor()
 	{
 		if (arguments.length) {
@@ -22,8 +25,7 @@ class Options
 	}
 
 	/**
-	 *
-	 * @param {object} object
+	 * @param {object} object key-value set of options
 	 * @returns {Options}
 	 */
 	static from(object)

@@ -2,6 +2,14 @@
 
 class Tokenizer
 {
+	/**
+	 *
+	 * @param {TokenizerOptions} options
+	 * @param {Function} onField
+	 * @param {Function} onRowEnd
+	 * @param {Function} onEnd
+	 * @returns {Tokenizer}
+	 */
 	constructor(options, onField, onRowEnd, onEnd)
 	{
 		this.delimiterCode = options.delimiter.charCodeAt(0);
@@ -21,6 +29,11 @@ class Tokenizer
 		this.onEnd = onEnd;
 	}
 
+	/**
+	 *
+	 * @param {number} additionalSize number of bytes to *add* to buffer size
+	 * @returns {undefined}
+	 */
 	alloc(additionalSize)
 	{
 		const newBuf = Buffer.allocUnsafe(this.valueBuf.length + additionalSize);
@@ -32,6 +45,11 @@ class Tokenizer
 		this.valueBuf = newBuf;
 	}
 
+	/**
+	 *
+	 * @param {Buffer} buf
+	 * @returns {undefined}
+	 */
 	write(buf)
 	{
 		if (this.valueBuf.length - this.valueBufSize - 1 < buf.length) {
@@ -80,12 +98,20 @@ class Tokenizer
 		}
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	end()
 	{
 		this.endRow();
 		this.onEnd();
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	endFieldValue()
 	{
 		this.onField(this.valueBuf, 0, this.valueBufSize);
@@ -93,6 +119,10 @@ class Tokenizer
 		this.valueBufSize = 0;
 	}
 
+	/**
+	 *
+	 * @returns {undefined}
+	 */
 	endRow()
 	{
 		this.endFieldValue();

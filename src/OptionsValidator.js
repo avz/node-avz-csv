@@ -2,6 +2,13 @@
 
 class OptionsValidator
 {
+	/**
+	 *
+	 * @param {string} name
+	 * @param {*} value
+	 * @param {string|Function} type
+	 * @returns {undefined}
+	 */
 	_validate(name, value, type)
 	{
 		if (type instanceof Function) {
@@ -15,6 +22,14 @@ class OptionsValidator
 		}
 	}
 
+	/**
+	 *
+	 * @param {*} obj
+	 * @param {string} name
+	 * @param {*} defaultValue
+	 * @param {string|Function} type
+	 * @returns {*}
+	 */
 	_needType(obj, name, defaultValue, type)
 	{
 		const value = obj[name];
@@ -28,16 +43,35 @@ class OptionsValidator
 		return value;
 	}
 
+	/**
+	 * @param {object} obj
+	 * @param {string} name
+	 * @param {*} defaultValue
+	 * @returns {boolean}
+	 */
 	needBool(obj, name, defaultValue)
 	{
 		return this._needType(obj, name, defaultValue, 'boolean');
 	}
 
+	/**
+	 * @param {object} obj
+	 * @param {string} name
+	 * @param {*} defaultValue
+	 * @param {Function} cb
+	 * @returns {boolean}
+	 */
 	needCb(obj, name, defaultValue, cb)
 	{
 		return this._needType(obj, name, defaultValue, cb);
 	}
 
+	/**
+	 * @param {object} obj
+	 * @param {string} name
+	 * @param {*} defaultValue
+	 * @returns {string}
+	 */
 	needByte(obj, name, defaultValue)
 	{
 		const value = obj[name];
@@ -55,6 +89,12 @@ class OptionsValidator
 		return value;
 	}
 
+	/**
+	 * @param {object} obj
+	 * @param {string} name
+	 * @param {*} defaultValue
+	 * @returns {number}
+	 */
 	needNumber(obj, name, defaultValue)
 	{
 		return this._needType(obj, name, defaultValue, 'number');

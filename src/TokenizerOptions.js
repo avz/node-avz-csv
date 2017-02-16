@@ -4,6 +4,10 @@ const OptionsValidator = require('./OptionsValidator');
 
 class TokenizerOptions
 {
+	/**
+	 *
+	 * @returns {TokenizerOptions}
+	 */
 	constructor()
 	{
 		if (arguments.length) {
@@ -15,6 +19,11 @@ class TokenizerOptions
 		this.initialBufferSize = 2 * 64 * 1024;
 	}
 
+	/**
+	 * @constructs
+	 * @param {object} options
+	 * @returns {TokenizerOptions}
+	 */
 	static from(options)
 	{
 		const instance = new TokenizerOptions;

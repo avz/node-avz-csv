@@ -211,7 +211,13 @@ module.exports = {
         "prefer-template": "off",
         "quote-props": "off",
         "radix": ["error", "always"],
-        "require-jsdoc": "off",
+        "require-jsdoc": ['error', {
+			"require": {
+				"FunctionDeclaration": true,
+				"MethodDefinition": true,
+				"ArrowFunctionExpression": true
+			}
+		}],
         "rest-spread-spacing": [
             "error",
             "never"
@@ -243,7 +249,10 @@ module.exports = {
             "error",
             "never"
         ],
-        "valid-jsdoc": "off",
+        "valid-jsdoc": ["error", {
+			"requireReturnDescription": false,
+			"requireParamDescription": false
+		}],
         "vars-on-top": "off",
         "wrap-regex": "error",
         "yield-star-spacing": "error",
