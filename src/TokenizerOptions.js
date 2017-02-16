@@ -51,8 +51,6 @@ class TokenizerOptions
 			throw new Error('Option `trim` cannot be combined with `ltrim` or `rtrim`');
 		}
 
-		instance.skipEmptyLines = validator.needBool(options, 'skipEmptyLines', instance.skipEmptyLines);
-
 		return instance;
 	}
 }

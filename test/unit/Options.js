@@ -22,8 +22,7 @@ describe('Options', () => {
 			quote: ['"', "'"],
 			ltrim: [false, true],
 			rtrim: [false, true],
-			trim: [false, true],
-			skipEmptyLines: [false, true]
+			trim: [false, true]
 		};
 
 		for (const name in values) {
