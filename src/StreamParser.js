@@ -20,27 +20,27 @@ class StreamParser extends Transform
 		const options = Options.from(opts);
 
 		if (options.detectDates) {
-			throw NotImplemented('Options.detectDates');
+			throw new NotImplemented('Options.detectDates');
 		}
 
 		if (options.detectTypes) {
-			throw NotImplemented('Options.detectTypes');
+			throw new NotImplemented('Options.detectTypes');
 		}
 
 		if (options.ltrim) {
-			throw NotImplemented('Options.ltrim');
+			throw new NotImplemented('Options.ltrim');
 		}
 
 		if (options.rtrim) {
-			throw NotImplemented('Options.ltrim');
+			throw new NotImplemented('Options.ltrim');
 		}
 
 		if (options.trim) {
-			throw NotImplemented('Options.trim');
+			throw new NotImplemented('Options.trim');
 		}
 
 		if (options.skipEmptyLines) {
-			throw NotImplemented('Options.skipEmptyLines');
+			throw new NotImplemented('Options.skipEmptyLines');
 		}
 
 		super({objectMode: true});

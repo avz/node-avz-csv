@@ -77,17 +77,14 @@ describe('StreamParser', () => {
 	});
 
 	describe('not implemented options', () => {
-		const test = options => {
-			const o = Options.from(options);
-
-			return new StreamParser(o);
-		};
-
 		const notImplemented = ['detectDates', 'detectTypes', 'ltrim', 'rtrim', 'trim', 'skipEmptyLines'];
 
 		for (const opt of notImplemented) {
 			it(opt, () => {
-				assert.throws(() => new StreamParser(Options.from({[opt]: true})));
+				assert.throws(
+					() => new StreamParser(Options.from({[opt]: true})),
+					NotImplemented
+				);
 			});
 		}
 	});
