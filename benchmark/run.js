@@ -45,17 +45,7 @@ class Repeater extends Readable
 		}
 
 		const chunkSize = Math.ceil(minSize / data.length) * data.length;
-		const chunk = Buffer.allocUnsafe(chunkSize);
-
-		var off = 0;
-
-		while (off < chunk.length) {
-			data.copy(chunk, off);
-
-			off += chunk.length;
-		}
-
-		return chunk;
+		return Buffer.allocUnsafe(chunkSize).fill(data);
 	}
 
 	/**
@@ -97,12 +87,16 @@ const run = (datasetName, repeatCount) => {
 			+ ': ');
 
 		const start = process.cpuUsage();
+		var rowsCount = 0;
 
-		sp.on('data', () => {});
+		sp.on('data', () => {
+			rowsCount++;
+		});
+
 		sp.on('end', () => {
 			const ela = process.cpuUsage(start).user / 1e6;
 
-			process.stdout.write('' + ela.toFixed(3) + ' sec\n');
+			process.stdout.write('' + ela.toFixed(3) + ' sec (' + rowsCount + ' rows)\n');
 
 			success();
 		});
@@ -113,5 +107,5 @@ const run = (datasetName, repeatCount) => {
 
 Promise.resolve()
 	.then(() => run('ru-opendata', 50000))
-	.then(() => run('short-lines', 5000000))
+	.then(() => run('short-lines', 500000))
 ;
