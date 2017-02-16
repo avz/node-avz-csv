@@ -81,4 +81,17 @@ describe('Tokenizer', () => {
 	it('multirows', () => {
 		assert.deepStrictEqual(parse(',', '"', 'aaa,bbb\nccc,ddd'), [['aaa', 'bbb'], ['ccc', 'ddd']]);
 	});
+
+	it('line ending', () => {
+		assert.deepStrictEqual(parse(',', '"', 'aaa\r\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\rbbb\nhello'), [['aaa\rbbb'], ['hello']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\r\r\r\nbbb'), [['aaa\r\r'], ['bbb']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\nbbb'), [['aaa'], ['bbb']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\nbbb'), [['aaa'], ['bbb']]);
+	});
+
+	it('empty lines', () => {
+		assert.deepStrictEqual(parse(',', '"', 'aaa\n\nbbb'), [['aaa'], [''], ['bbb']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\r\n\r\nbbb'), [['aaa'], [''], ['bbb']]);
+	});
 });

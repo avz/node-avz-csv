@@ -17,6 +17,7 @@ class Tokenizer
 
 		this.quoted = false;
 		this.lastCharIsQuote = false;
+		this.lastCharIsCR = false;
 
 		this.valueBuf = Buffer.allocUnsafe(options.initialBufferSize);
 		this.valueBufSize = 0;
@@ -86,12 +87,29 @@ class Tokenizer
 				}
 			}
 
+			if (chr === 0x0a) {
+				if (this.lastCharIsCR) {
+					//remove CR from result string
+					this.valueBufSize--;
+
+					this.lastCharIsCR = false;
+				}
+
+				this.endRow();
+
+				continue;
+			}
+
+			this.lastCharIsCR = false;
+
 			if (chr === delimiterCode) {
 				this.endFieldValue();
 			} else if (chr === quoteCode) {
 				this.quoted = true;
-			} else if (chr === 0x0d || chr === 0x0a) {
-				this.endRow();
+			} else if (chr === 0x0d) {
+				this.lastCharIsCR = true;
+
+				value[this.valueBufSize++] = chr;
 			} else {
 				value[this.valueBufSize++] = chr;
 			}
