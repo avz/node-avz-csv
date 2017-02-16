@@ -89,7 +89,7 @@ class Tokenizer
 
 			if (chr === 0x0a) {
 				if (this.lastCharIsCR) {
-					//remove CR from result string
+					// remove CR from result string
 					this.valueBufSize--;
 
 					this.lastCharIsCR = false;
@@ -122,7 +122,10 @@ class Tokenizer
 	 */
 	end()
 	{
-		this.endRow();
+		if (this.valueBufSize) {
+			this.endRow();
+		}
+
 		this.onEnd();
 	}
 

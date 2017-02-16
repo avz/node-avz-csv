@@ -90,6 +90,12 @@ describe('Tokenizer', () => {
 		assert.deepStrictEqual(parse(',', '"', 'aaa\nbbb'), [['aaa'], ['bbb']]);
 	});
 
+	it('last row is empty', () => {
+		assert.deepStrictEqual(parse(',', '"', 'aaa'), [['aaa']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\n'), [['aaa']]);
+		assert.deepStrictEqual(parse(',', '"', 'aaa\r\n'), [['aaa']]);
+	});
+
 	it('empty lines', () => {
 		assert.deepStrictEqual(parse(',', '"', 'aaa\n\nbbb'), [['aaa'], [''], ['bbb']]);
 		assert.deepStrictEqual(parse(',', '"', 'aaa\r\n\r\nbbb'), [['aaa'], [''], ['bbb']]);
