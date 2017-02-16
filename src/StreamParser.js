@@ -4,17 +4,45 @@ const Transform = require('stream').Transform;
 const Tokenizer = require('./Tokenizer');
 const TokenizerOptions = require('./TokenizerOptions');
 const RowConstructor = require('./RowConstructor');
+const Options = require('./Options');
+const NotImplemented = require('./error/NotImplemented');
 const assert = require('assert');
 
 class StreamParser extends Transform
 {
 	/**
 	 *
-	 * @param {Options} options
+	 * @param {object|Options} opts
 	 * @returns {Parser}
 	 */
-	constructor(options)
+	constructor(opts)
 	{
+		const options = Options.from(opts);
+
+		if (options.detectDates) {
+			throw NotImplemented('Options.detectDates');
+		}
+
+		if (options.detectTypes) {
+			throw NotImplemented('Options.detectTypes');
+		}
+
+		if (options.ltrim) {
+			throw NotImplemented('Options.ltrim');
+		}
+
+		if (options.rtrim) {
+			throw NotImplemented('Options.ltrim');
+		}
+
+		if (options.trim) {
+			throw NotImplemented('Options.trim');
+		}
+
+		if (options.skipEmptyLines) {
+			throw NotImplemented('Options.skipEmptyLines');
+		}
+
 		super({objectMode: true});
 
 		this.rowNumber = 0;
