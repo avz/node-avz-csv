@@ -71,11 +71,6 @@ class Options
 		instance.trim = validator.needBool(object, 'trim', instance.trim);
 		instance.ltrim = validator.needBool(object, 'ltrim', instance.ltrim);
 		instance.rtrim = validator.needBool(object, 'rtrim', instance.rtrim);
-
-		if (instance.trim && (instance.ltrim || instance.rtrim)) {
-			throw new Error('Option `trim` cannot be combined with `ltrim` or `rtrim`');
-		}
-
 		instance.skipEmptyLines = validator.needBool(object, 'skipEmptyLines', instance.skipEmptyLines);
 
 		return instance;

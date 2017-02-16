@@ -62,22 +62,6 @@ describe('Options', () => {
 					);
 				});
 			});
-
-			it('trim in combination of ltrim or rtrim', () => {
-				assert.throws(
-					() => Options.from({trim: true, ltrim: true}),
-					/Option `trim` cannot be combined with `ltrim` or `rtrim`/
-				);
-
-				assert.throws(
-					() => Options.from({rtrim: true, trim: true}),
-					/Option `trim` cannot be combined with `ltrim` or `rtrim`/
-				);
-
-				assert.doesNotThrow(
-					() => Options.from({rtrim: false, trim: false})
-				);
-			});
 		});
 	});
 });

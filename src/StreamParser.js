@@ -27,22 +27,6 @@ class StreamParser extends Transform
 			throw new NotImplemented('Options.detectTypes');
 		}
 
-		if (options.ltrim) {
-			throw new NotImplemented('Options.ltrim');
-		}
-
-		if (options.rtrim) {
-			throw new NotImplemented('Options.ltrim');
-		}
-
-		if (options.trim) {
-			throw new NotImplemented('Options.trim');
-		}
-
-		if (options.skipEmptyLines) {
-			throw new NotImplemented('Options.skipEmptyLines');
-		}
-
 		super({objectMode: true});
 
 		this.rowNumber = 0;
@@ -64,7 +48,11 @@ class StreamParser extends Transform
 		this.tokenizer = new Tokenizer(
 			TokenizerOptions.from({
 				delimiter: this.options.delimiter,
-				quote: this.options.quote
+				quote: this.options.quote,
+				ltrim: this.options.ltrim,
+				rtrim: this.options.rtrim,
+				trim: this.options.trim,
+				skipEmptyLines: this.options.skipEmptyLines
 			}),
 			this.onTokenizerValue.bind(this),
 			this.onTokenizerRowEnd.bind(this),

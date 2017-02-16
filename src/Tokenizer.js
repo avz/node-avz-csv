@@ -1,5 +1,7 @@
 'use strict';
 
+const NotImplemented = require('./error/NotImplemented');
+
 class Tokenizer
 {
 	/**
@@ -12,6 +14,22 @@ class Tokenizer
 	 */
 	constructor(options, onField, onRowEnd, onEnd)
 	{
+		if (options.ltrim) {
+			throw new NotImplemented('Options.ltrim');
+		}
+
+		if (options.rtrim) {
+			throw new NotImplemented('Options.ltrim');
+		}
+
+		if (options.trim) {
+			throw new NotImplemented('Options.trim');
+		}
+
+		if (options.skipEmptyLines) {
+			throw new NotImplemented('Options.skipEmptyLines');
+		}
+
 		this.delimiterCode = options.delimiter.charCodeAt(0);
 		this.quoteCode = options.quote.charCodeAt(0);
 
