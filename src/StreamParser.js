@@ -58,10 +58,12 @@ class StreamParser extends Transform
 			this.onTokenizerRowEnd.bind(this),
 			this.onTokenizerEnd.bind(this)
 		);
+
+		this.batchBuffer = [];
 	}
 
 	/**
-	 *
+	 * @private
 	 * @param {Buffer} buf
 	 * @param {number} start
 	 * @param {number} end
@@ -73,7 +75,7 @@ class StreamParser extends Transform
 	}
 
 	/**
-	 *
+	 * @private
 	 * @returns {undefined}
 	 */
 	onTokenizerRowEnd()
@@ -84,16 +86,16 @@ class StreamParser extends Transform
 	}
 
 	/**
-	 *
+	 * @private
 	 * @returns {undefined}
 	 */
 	onTokenizerEnd()
 	{
-		this.push(null);
+
 	}
 
 	/**
-	 *
+	 * @private
 	 * @param {*[]} row
 	 * @returns {undefined}
 	 */
@@ -108,15 +110,23 @@ class StreamParser extends Transform
 			return;
 		}
 
+		var rowObject;
+
 		if (this.rowConstructor) {
-			this.push(this.rowConstructor.createFromArray(row));
+			rowObject = this.rowConstructor.createFromArray(row);
 		} else {
-			this.push(row);
+			rowObject = row;
+		}
+
+		if (this.options.batch) {
+			this.batchBuffer.push(rowObject);
+		} else {
+			this.push(rowObject);
 		}
 	}
 
 	/**
-	 *
+	 * @private
 	 * @returns {undefined}
 	 */
 	initRowConstructor()
@@ -125,7 +135,7 @@ class StreamParser extends Transform
 	}
 
 	/**
-	 *
+	 * @private
 	 * @param {string|Buffer} data
 	 * @param {string} enc
 	 * @param {Function} cb
@@ -137,11 +147,13 @@ class StreamParser extends Transform
 
 		this.tokenizer.write(data);
 
+		this.flushBatchBuffer();
+
 		cb();
 	}
 
 	/**
-	 *
+	 * @private
 	 * @param {Function} cb
 	 * @returns {undefined}
 	 */
@@ -149,7 +161,28 @@ class StreamParser extends Transform
 	{
 		this.tokenizer.end();
 
+		this.flushBatchBuffer();
+
 		cb();
+	}
+
+	/**
+	 * @private
+	 * @returns {undefined}
+	 */
+	flushBatchBuffer()
+	{
+		if (!this.options.batch) {
+			return;
+		}
+
+		if (!this.batchBuffer.length) {
+			return;
+		}
+
+		this.push(this.batchBuffer);
+
+		this.batchBuffer = [];
 	}
 }
 

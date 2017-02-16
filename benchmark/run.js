@@ -45,6 +45,7 @@ class Repeater extends Readable
 		}
 
 		const chunkSize = Math.ceil(minSize / data.length) * data.length;
+
 		return Buffer.allocUnsafe(chunkSize).fill(data);
 	}
 
@@ -71,15 +72,16 @@ class Repeater extends Readable
  *
  * @param {string} datasetName
  * @param {number} repeatCount
+ * @param {object} options
  * @returns {Promise}
  */
-const run = (datasetName, repeatCount) => {
+const run = (datasetName, repeatCount, options) => {
 	return new Promise((success, reject) => {
 		const repeater = new Repeater(path.join(__dirname, 'datasets', datasetName + '.csv'), repeatCount);
-		const sp = new StreamParser();
+		const sp = new StreamParser(options);
 
 		process.stdout.write(
-			'Dataset `' + datasetName + '`'
+			'Dataset `' + datasetName + '` ' + JSON.stringify(options)
 			+ ' ['
 				+ 'x' + repeater.realRepeatCount
 				+ ', ' + (repeater.bytesCount / 1024 / 1024).toFixed(1) + ' MiB'
@@ -89,14 +91,24 @@ const run = (datasetName, repeatCount) => {
 		const start = process.cpuUsage();
 		var rowsCount = 0;
 
-		sp.on('data', () => {
-			rowsCount++;
+		sp.on('data', (d) => {
+			if (options.batch) {
+				rowsCount += d.length;
+			} else {
+				rowsCount++;
+			}
 		});
 
 		sp.on('end', () => {
 			const ela = process.cpuUsage(start).user / 1e6;
 
-			process.stdout.write('' + ela.toFixed(3) + ' sec (' + rowsCount + ' rows)\n');
+			process.stdout.write(
+				'' + ela.toFixed(3) + ' sec'
+				+ ' ('
+					+ rowsCount + ' rows'
+					+ ', ' + (rowsCount / ela).toFixed(0) + ' rows per cpu user sec'
+				+ ')\n'
+			);
 
 			success();
 		});
@@ -106,6 +118,8 @@ const run = (datasetName, repeatCount) => {
 };
 
 Promise.resolve()
-	.then(() => run('ru-opendata', 50000))
-	.then(() => run('short-lines', 500000))
+	.then(() => run('ru-opendata', 50000, {batch: false}))
+	.then(() => run('ru-opendata', 50000, {batch: true}))
+	.then(() => run('short-lines', 500000, {batch: false}))
+	.then(() => run('short-lines', 500000, {batch: true}))
 ;

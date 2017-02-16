@@ -7,9 +7,7 @@ const NotImplemented = require('../../src/error/NotImplemented');
 
 describe('StreamParser', () => {
 	const parse = (opts, input) => {
-		const p = new StreamParser(
-			Options.from(opts)
-		);
+		const p = new StreamParser(opts);
 
 		const out = [];
 
@@ -17,7 +15,15 @@ describe('StreamParser', () => {
 			out.push(row);
 		});
 
-		p.end(Buffer.from(input));
+		if (input instanceof Array) {
+			for (const inp of input) {
+				p.write(Buffer.from(inp));
+			}
+
+			p.end();
+		} else {
+			p.end(Buffer.from(input));
+		}
 
 		return out;
 	};
@@ -87,5 +93,22 @@ describe('StreamParser', () => {
 				);
 			});
 		}
+	});
+
+	it('batch', () => {
+		assert.deepStrictEqual(
+			parse({columns: null, batch: true}, 'hello,world\nfoo,bar'),
+			[[['hello', 'world']], [['foo', 'bar']]]
+		);
+
+		assert.deepStrictEqual(
+			parse({columns: null, batch: true}, ['hello,world\nfoo,bar\naaa,bbb']),
+			[[['hello', 'world'], ['foo', 'bar']], [['aaa', 'bbb']]]
+		);
+
+		assert.deepStrictEqual(
+			parse({columns: null, batch: true}, ['hello,world\nfoo,bar\naaa,bbb\n']),
+			[[['hello', 'world'], ['foo', 'bar'], ['aaa', 'bbb']]]
+		);
 	});
 });

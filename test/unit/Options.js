@@ -18,6 +18,7 @@ describe('Options', () => {
 			detectTypes: [false, true],
 			detectDates: [false, true],
 			columns: ['first-line', ['a', 'b', 'c'], null],
+			batch: [false, true],
 			delimiter: [',', ';', '\t'],
 			quote: ['"', "'"],
 			ltrim: [false, true],

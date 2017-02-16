@@ -17,6 +17,7 @@ class Options
 		this.detectDates = false;
 		this.columns = 'first-line';
 		this.delimiter = ',';
+		this.batch = false;
 		this.quote = '"';
 		this.ltrim = false;
 		this.rtrim = false;
@@ -66,6 +67,7 @@ class Options
 			}
 		);
 
+		instance.batch = validator.needBool(object, 'batch', instance.batch);
 		instance.delimiter = validator.needByte(object, 'delimiter', instance.delimiter);
 		instance.quote = validator.needByte(object, 'quote', instance.quote);
 		instance.trim = validator.needBool(object, 'trim', instance.trim);
