@@ -81,7 +81,7 @@ const run = (datasetName, repeatCount, options) => {
 		const sp = new StreamParser(options);
 
 		process.stdout.write(
-			'Dataset `' + datasetName + '` ' + JSON.stringify(options)
+			'' + datasetName + ' ' + JSON.stringify(options)
 			+ ' ['
 				+ 'x' + repeater.realRepeatCount
 				+ ', ' + (repeater.bytesCount / 1024 / 1024).toFixed(1) + ' MiB'
@@ -118,12 +118,12 @@ const run = (datasetName, repeatCount, options) => {
 };
 
 Promise.resolve()
-	.then(() => run('ru-opendata', 50000, {batch: false}))
-	.then(() => run('ru-opendata', 50000, {batch: false, rtrim: true, ltrim: true}))
-	.then(() => run('ru-opendata', 50000, {batch: true}))
 	.then(() => run('short-lines', 500000, {batch: false}))
 	.then(() => run('short-lines', 500000, {batch: false, rtrim: true, ltrim: true}))
 	.then(() => run('short-lines', 500000, {batch: true}))
+	.then(() => run('large-lines', 50000, {batch: false}))
+	.then(() => run('large-lines', 50000, {batch: false, rtrim: true, ltrim: true}))
+	.then(() => run('large-lines', 50000, {batch: true}))
 	.then(() => run('numbers', 500000, {batch: true, detectNumbers: false}))
 	.then(() => run('numbers', 500000, {batch: true, detectNumbers: true}))
 	.then(() => run('dates', 500000, {batch: true, detectDates: false}))
