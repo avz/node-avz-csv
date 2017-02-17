@@ -48,6 +48,15 @@ describe('Tokenizer', () => {
 		assert.deepStrictEqual(parse({}, 'aaa,"hello"\n"world"'), [['aaa', 'hello'], ['world']]);
 	});
 
+	it('skipEmptyLines', () => {
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, '\n\n'), []);
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, '\n'), []);
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, ''), []);
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, ','), [['', '']]);
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, 'a,b\n\nc,d'), [['a', 'b'], ['c', 'd']]);
+		assert.deepStrictEqual(parse({skipEmptyLines: true}, 'a,b\n\n\n\nc,d\n\n'), [['a', 'b'], ['c', 'd']]);
+	});
+
 	it('buffer size', () => {
 		const opts = TokenizerOptions.from({delimiter: ',', quote: '"', initialBufferSize: 1});
 		const rows = [];
@@ -94,6 +103,13 @@ describe('Tokenizer', () => {
 		assert.deepStrictEqual(parse({}, 'aaa'), [['aaa']]);
 		assert.deepStrictEqual(parse({}, 'aaa\n'), [['aaa']]);
 		assert.deepStrictEqual(parse({}, 'aaa\r\n'), [['aaa']]);
+		assert.deepStrictEqual(parse({}, ',,'), [['', '', '']]);
+	});
+
+	it('empty fields', () => {
+		assert.deepStrictEqual(parse({}, ''), []);
+		assert.deepStrictEqual(parse({}, '\n'), [['']]);
+		assert.deepStrictEqual(parse({}, ',,\n'), [['', '', '']]);
 	});
 
 	it('empty lines', () => {

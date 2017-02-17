@@ -71,6 +71,7 @@ class Options
 		instance.quote = validator.needByte(object, 'quote', instance.quote);
 		instance.ltrim = validator.needBool(object, 'ltrim', instance.ltrim);
 		instance.rtrim = validator.needBool(object, 'rtrim', instance.rtrim);
+		instance.skipEmptyLines = validator.needBool(object, 'skipEmptyLines', instance.skipEmptyLines);
 
 		return instance;
 	}

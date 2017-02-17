@@ -44,6 +44,7 @@ class TokenizerOptions
 		instance.initialBufferSize = validator.needNumber(options, 'initialBufferSize', instance.initialBufferSize);
 		instance.ltrim = validator.needBool(options, 'ltrim', instance.ltrim);
 		instance.rtrim = validator.needBool(options, 'rtrim', instance.rtrim);
+		instance.skipEmptyLines = validator.needBool(options, 'skipEmptyLines', instance.skipEmptyLines);
 
 		return instance;
 	}

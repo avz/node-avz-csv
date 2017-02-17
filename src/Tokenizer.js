@@ -27,10 +27,12 @@ class Tokenizer
 
 		this.options = options;
 
-		this.needTriming = this.options.ltrim || this.options.rtrim;
+		this.needPreProcessing = this.options.ltrim || this.options.rtrim || this.options.skipEmptyLines;
 
-		this.linesCount = 0;
-		this.fieldsCount = 0;
+		this.fieldsCount = 1;
+		this.lastFieldIsEmpty = false;
+
+		this.rowsCount = 0;
 
 		this.onField = onField;
 		this.onRowEnd = onRowEnd;
@@ -113,6 +115,7 @@ class Tokenizer
 
 			if (chr === delimiterCode) {
 				this.endFieldValue();
+				this.fieldsCount++;
 				this.firstQuotePosition = -1;
 
 			} else if (chr === quoteCode) {
@@ -137,7 +140,7 @@ class Tokenizer
 	 */
 	end()
 	{
-		if (this.valueBufSize) {
+		if (this.fieldsCount > 1 || this.valueBufSize) {
 			this.endRow();
 		}
 
@@ -150,8 +153,8 @@ class Tokenizer
 	 */
 	endFieldValue()
 	{
-		if (this.needTriming) {
-			this.onFieldWithTriming(this.valueBuf, 0, this.valueBufSize);
+		if (this.needPreProcessing) {
+			this.onFieldWithPreProcessing(this.valueBuf, 0, this.valueBufSize);
 		} else {
 			this.onField(this.valueBuf, 0, this.valueBufSize);
 		}
@@ -166,11 +169,10 @@ class Tokenizer
 	 * @param {number} end
 	 * @returns {undefined}
 	 */
-	onFieldWithTriming(buf, start, end)
+	onFieldWithPreProcessing(buf, start, end)
 	{
 		var trimmedStart = start;
 		var trimmedEnd = end;
-
 		var i;
 
 		if (this.options.ltrim) {
@@ -197,6 +199,26 @@ class Tokenizer
 			trimmedEnd = i + 1;
 		}
 
+		if (this.options.skipEmptyLines) {
+			if (this.fieldsCount === 1) {
+				if (trimmedEnd === trimmedStart) {
+					this.lastFieldIsEmpty = true;
+
+					return;
+				}
+
+				this.lastFieldIsEmpty = false;
+
+			} else if (this.fieldsCount === 2 && this.lastFieldIsEmpty) {
+				/*
+				 * прошлый филд был пустой и мы не дёнули коллбек для него
+				 * теперь обнаружилось второе поле, поэтому нужно сначала
+				 * дёрнуть коллбек на первое поле
+				 */
+				this.onField(buf, 0, 0);
+			}
+		}
+
 		this.onField(buf, trimmedStart, trimmedEnd);
 	}
 
@@ -217,7 +239,18 @@ class Tokenizer
 	endRow()
 	{
 		this.endFieldValue();
-		this.linesCount++;
+
+		if (this.options.skipEmptyLines && this.fieldsCount === 1 && this.lastFieldIsEmpty) {
+			/*
+			 * в строке только одно поле и оно пустое - пропускаем
+			 */
+			this.fieldsCount = 1;
+
+			return;
+		}
+
+		this.fieldsCount = 1;
+		this.rowsCount++;
 
 		this.onRowEnd();
 	}

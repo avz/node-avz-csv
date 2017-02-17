@@ -40,6 +40,18 @@ describe('StreamParser', () => {
 		);
 	});
 
+	it('skipEmptyLines', () => {
+		assert.deepStrictEqual(
+			parse({columns: null, skipEmptyLines: true}, 'hello,world\n\n\nfoo,bar\n,\n\n'),
+			[['hello', 'world'], ['foo', 'bar'], ['', '']]
+		);
+
+		assert.deepStrictEqual(
+			parse({columns: null, skipEmptyLines: false}, 'hello,world\n\n\nfoo,bar'),
+			[['hello', 'world'], [''], [''], ['foo', 'bar']]
+		);
+	});
+
 	it('quote', () => {
 		assert.deepStrictEqual(
 			parse({columns: null}, 'hello,"world"\n"foo",bar'),
