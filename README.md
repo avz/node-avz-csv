@@ -2,6 +2,12 @@
 
 ## Sub-project of [jl-sql](https://github.com/avz/jl-sql). Not for external use.
 
+### Installation
+
+```
+npm install @avz/csv
+```
+
 ### Benchmark results
 
 ```
