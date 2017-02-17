@@ -3,13 +3,15 @@
 class TypeCoercer
 {
 	/**
-	 *
+	 * @param {boolean} detectNumbers
 	 * @param {boolean} detectDates
 	 * @returns {TypeCoercer}
 	 */
-	constructor(detectDates)
+	constructor(detectNumbers, detectDates)
 	{
+		this.detectNumbers = !!detectNumbers;
 		this.detectDates = !!detectDates;
+
 		this.numberRegexp = /^[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?$/;
 	}
 
@@ -20,7 +22,7 @@ class TypeCoercer
 	 */
 	coerce(string)
 	{
-		if (this.numberRegexp.test(string)) {
+		if (this.detectNumbers && this.numberRegexp.test(string)) {
 			const float = parseFloat(string);
 
 			if (isNaN(float) || !Number.isFinite(float)) {
@@ -28,7 +30,7 @@ class TypeCoercer
 			}
 
 			return float;
-		} else if (this.detectDates) {
+		} else if (this.detectDates && !this.numberRegexp.test(string)) {
 			const date = new Date(string);
 
 			if (isNaN(date.getTime())) {

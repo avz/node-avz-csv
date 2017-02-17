@@ -5,7 +5,7 @@ const TypeCoercer = require('../../src/TypeCoercer');
 
 describe('TypeCoercer', () => {
 	describe('numbers', () => {
-		const c = new TypeCoercer(false);
+		const c = new TypeCoercer(true, false);
 
 		it('int', () => {
 			assert.strictEqual(c.coerce('0'), 0);
@@ -36,7 +36,7 @@ describe('TypeCoercer', () => {
 	});
 
 	describe('dates', () => {
-		const c = new TypeCoercer(true);
+		const c = new TypeCoercer(false, true);
 
 		it('valid', () => {
 			assert.strictEqual(c.coerce('2016-01-01').getTime(), (new Date('2016-01-01')).getTime());
@@ -44,9 +44,18 @@ describe('TypeCoercer', () => {
 		});
 
 		it('invalid', () => {
-			assert.strictEqual(c.coerce('123'), 123);
+			assert.strictEqual(c.coerce('123'), '123');
 			assert.strictEqual(c.coerce('2016-01-01 01:01:01 hello'), '2016-01-01 01:01:01 hello');
 			assert.strictEqual(c.coerce('Thu'), 'Thu');
+		});
+	});
+
+	describe('numbers + dates', () => {
+		const c = new TypeCoercer(true, true);
+
+		it('valid', () => {
+			assert.strictEqual(c.coerce('123'), 123);
+			assert.strictEqual(c.coerce('2016-01-01').getTime(), (new Date('2016-01-01')).getTime());
 		});
 	});
 });
