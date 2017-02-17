@@ -2,8 +2,6 @@
 
 const assert = require('assert');
 const StreamParser = require('../../src/StreamParser');
-const Options = require('../../src/Options');
-const NotImplemented = require('../../src/error/NotImplemented');
 
 describe('StreamParser', () => {
 	const parse = (opts, input) => {
@@ -94,19 +92,6 @@ describe('StreamParser', () => {
 		});
 	});
 
-	describe('not implemented options', () => {
-		const notImplemented = ['detectDates', 'detectTypes'];
-
-		for (const opt of notImplemented) {
-			it(opt, () => {
-				assert.throws(
-					() => new StreamParser(Options.from({[opt]: true})),
-					NotImplemented
-				);
-			});
-		}
-	});
-
 	it('batch', () => {
 		assert.deepStrictEqual(
 			parse({columns: null, batch: true}, 'hello,world\nfoo,bar'),
@@ -122,5 +107,23 @@ describe('StreamParser', () => {
 			parse({columns: null, batch: true}, ['hello,world\nfoo,bar\naaa,bbb\n']),
 			[[['hello', 'world'], ['foo', 'bar'], ['aaa', 'bbb']]]
 		);
+	});
+
+	it('detectNumbers', () => {
+		assert.deepStrictEqual(
+			parse({columns: null, detectNumbers: true}, 'hello,123\n321,bar'),
+			[['hello', 123], [321, 'bar']]
+		);
+
+		assert.deepStrictEqual(
+			parse({columns: null, detectNumbers: true}, 'hello,123hello\n321,bar'),
+			[['hello', '123hello'], [321, 'bar']]
+		);
+	});
+
+	it('detectDates', () => {
+		const d = parse({columns: null, detectDates: true}, '2015-01-01')[0][0];
+
+		assert.strictEqual(d.getTime(), (new Date('2015-01-01')).getTime());
 	});
 });

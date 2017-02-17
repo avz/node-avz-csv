@@ -13,7 +13,7 @@ class Options
 			throw new Error('Use Options.from() to fill object with options');
 		}
 
-		this.detectTypes = false;
+		this.detectNumbers = false;
 		this.detectDates = false;
 		this.columns = 'first-line';
 		this.delimiter = ',';
@@ -40,7 +40,7 @@ class Options
 
 		const validator = new OptionsValidator;
 
-		instance.detectTypes = validator.needBool(object, 'detectTypes', instance.detectTypes);
+		instance.detectNumbers = validator.needBool(object, 'detectNumbers', instance.detectNumbers);
 		instance.detectDates = validator.needBool(object, 'detectDates', instance.detectDates);
 
 		instance.columns = validator.needCb(

@@ -15,7 +15,7 @@ describe('Options', () => {
 
 	describe('from()', () => {
 		const values = {
-			detectTypes: [false, true],
+			detectNumbers: [false, true],
 			detectDates: [false, true],
 			columns: ['first-line', ['a', 'b', 'c'], null],
 			batch: [false, true],

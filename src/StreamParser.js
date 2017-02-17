@@ -5,7 +5,7 @@ const Tokenizer = require('./Tokenizer');
 const TokenizerOptions = require('./TokenizerOptions');
 const RowConstructor = require('./RowConstructor');
 const Options = require('./Options');
-const NotImplemented = require('./error/NotImplemented');
+const TypeCoercer = require('./TypeCoercer');
 const assert = require('assert');
 
 class StreamParser extends Transform
@@ -19,15 +19,13 @@ class StreamParser extends Transform
 	{
 		const options = Options.from(opts);
 
-		if (options.detectDates) {
-			throw new NotImplemented('Options.detectDates');
-		}
-
-		if (options.detectTypes) {
-			throw new NotImplemented('Options.detectTypes');
-		}
-
 		super({objectMode: true});
+
+		this.coercer = null;
+
+		if (options.detectNumbers || options.detectDates) {
+			this.coercer = new TypeCoercer(options.detectNumbers, options.detectDates);
+		}
 
 		this.rowNumber = 0;
 
@@ -70,7 +68,13 @@ class StreamParser extends Transform
 	 */
 	onTokenizerValue(buf, start, end)
 	{
-		this.currentRow.push(buf.toString('utf-8', start, end));
+		const string = buf.toString('utf-8', start, end);
+
+		if (this.coercer) {
+			this.currentRow.push(this.coercer.coerce(string));
+		} else {
+			this.currentRow.push(string);
+		}
 	}
 
 	/**
