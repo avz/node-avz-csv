@@ -1,5 +1,7 @@
 # Fast CSV stream parser for Node.js
 
+[![Build Status](https://travis-ci.org/avz/node-avz-csv.svg?branch=master)](https://travis-ci.org/avz/node-avz-csv)
+
 ## Sub-project of [jl-sql](https://github.com/avz/jl-sql). Not for external use.
 
 ### Installation
